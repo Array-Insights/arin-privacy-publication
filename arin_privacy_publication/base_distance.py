@@ -4,7 +4,7 @@ from typing import List
 
 class BaseDistance(ABC):
     """
-    Abstract class for divergence measures.
+    Abstract class for distance measures.
     """
 
     @abstractmethod

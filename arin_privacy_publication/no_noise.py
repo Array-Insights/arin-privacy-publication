@@ -1,14 +1,12 @@
 from abc import ABC, abstractmethod
 from typing import List
 
+from arin_privacy_publication.base_noise import BaseNoise
 
-class BaseStatistic(ABC):
 
-    # Abstract class for statistics.
-
+class NoNoise(BaseNoise):
     def __init__(self):
-        pass
+        super().__init__(0)
 
-    @abstractmethod
     def __call__(self, sample: List[float]) -> List[float]:
-        raise NotImplementedError()
+        return sample
