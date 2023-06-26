@@ -19,12 +19,13 @@ class SafeMeanStatistic(BaseStatistic):
         self.epsilon = epsilon
 
     def __call__(self, sample: List[float]) -> List[float]:
-
         # Sensitivity of the mean function:
         # the largest value in the population divided by
         # the size of the population
-        max_abs_value = np.max(np.abs(sample))
-        sensitivity = max_abs_value / len(sample)
+        max_abs_value = np.max(sample)
+        min_abs_value = np.min(sample)
+
+        sensitivity = (max_abs_value - min_abs_value) / len(sample)
 
         beta = sensitivity / self.epsilon
         noisy_sum = np.sum(sample) + np.random.laplace(0, beta)
