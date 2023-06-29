@@ -11,5 +11,5 @@ class BaseNoise(ABC):
         self.std_multiplier = std_multiplier
 
     @abstractmethod
-    def __call__(self, sample: List[float]) -> List[float]:
+    def __call__(self, sample: List[List[float]]) -> List[List[float]]:
         raise NotImplementedError()

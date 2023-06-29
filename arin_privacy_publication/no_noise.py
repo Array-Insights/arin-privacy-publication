@@ -8,5 +8,5 @@ class NoNoise(BaseNoise):
     def __init__(self):
         super().__init__(0)
 
-    def __call__(self, sample: List[float]) -> List[float]:
+    def __call__(self, sample: List[List[float]]) -> List[List[float]]:
         return sample

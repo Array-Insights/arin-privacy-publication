@@ -9,5 +9,5 @@ class VarianceStatistic(BaseStatistic):
     def __init__(self):
         self.statistic_name = "variance"
 
-    def __call__(self, sample: List[float]) -> List[float]:
-        return [float(numpy.var(sample))]
+    def __call__(self, sample: List[List[float]]) -> List[List[float]]:
+        return [float(numpy.var(sample[0]))]

@@ -7,6 +7,8 @@ from arin_privacy_publication.base_distance import BaseDistance
 from arin_privacy_publication.base_noise import BaseNoise
 from arin_privacy_publication.base_statistic import BaseStatistic
 from arin_privacy_publication.no_noise import NoNoise
+from arin_privacy_publication.normal_distribution_generator import NormalDistributionGenerator
+from arin_privacy_publication.student_t_test_statistic import StudentTTestStatistic
 
 
 def compute_privacy_dmr(
@@ -62,3 +64,22 @@ def add_laplace_noise(sample: List[float], scale: float = 1.0, resolution: Optio
         # Add the noise to the column
         sample[i] += noise[i]
     return sample
+
+
+def compute_power(
+    test: StudentTTestStatistic,
+    generator: NormalDistributionGenerator,
+    effect_size: float,
+    sample_size: int,
+    signigicance: float = 0.05,
+    run_count: int = 1000,
+) -> float:
+
+    success_count = 0
+    # For each row in our column
+    for i in range(run_count):
+        # scale noise to the resolution size for this column
+        test_result = test(generator.generate([0, effect_size], [1, 1], [sample_size, sample_size]))
+        if test_result[1] < signigicance:
+            success_count += 1
+    return success_count / run_count

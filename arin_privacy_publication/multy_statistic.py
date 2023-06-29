@@ -10,7 +10,7 @@ class MultyStatistic(BaseStatistic):
         self.statistic_name = "multy"
         self.list_statistic = list_statistic
 
-    def __call__(self, sample: List[float]) -> List[float]:
+    def __call__(self, sample: List[List[float]]) -> List[float]:
         list_result = []
         for statistic in self.list_statistic:
             list_result.extend(statistic(sample))

@@ -9,5 +9,5 @@ class MaxStatistic(BaseStatistic):
     def __init__(self):
         self.statistic_name = "max"
 
-    def __call__(self, sample: List[float]) -> List[float]:
-        return [float(numpy.max(sample))]
+    def __call__(self, sample: List[List[float]]) -> List[float]:
+        return [float(numpy.max(sample[0]))]

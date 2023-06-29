@@ -9,5 +9,5 @@ class MeanStatistic(BaseStatistic):
     def __init__(self):
         self.statistic_name = "mean"
 
-    def __call__(self, sample: List[float]) -> List[float]:
-        return [float(numpy.mean(sample))]
+    def __call__(self, sample: List[List[float]]) -> List[float]:
+        return [float(numpy.mean(sample[0]))]

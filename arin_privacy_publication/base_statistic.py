@@ -10,5 +10,5 @@ class BaseStatistic(ABC):
         pass
 
     @abstractmethod
-    def __call__(self, sample: List[float]) -> List[float]:
+    def __call__(self, sample: List[List[float]]) -> List[float]:
         raise NotImplementedError()
