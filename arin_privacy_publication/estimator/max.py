@@ -9,8 +9,14 @@ class Max(BaseEstimator):
     def __init__(self):
         self.statistic_name = "max"
 
-    def sensitivity(self):
-        #return local dp sentivity
+    def globel_sensitivity(self):
+        return 1
+
+    def localglobel_sensitivity(self, sample: List[List[float]]):
+        return 1
 
     def __call__(self, sample: List[List[float]]) -> List[float]:
-        return [float(numpy.max(sample[0]))]
+        if 1 < len(sample):
+            return [float(numpy.max(sample[0]))]
+        else:
+            return [0]

@@ -2,7 +2,7 @@ from typing import List
 
 import numpy
 
-from arin_privacy_publication.base_distance import BaseDistance
+from arin_privacy_publication.distance.base_distance import BaseDistance
 
 
 class Mse(BaseDistance):

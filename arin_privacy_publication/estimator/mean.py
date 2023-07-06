@@ -10,4 +10,7 @@ class Mean(BaseEstimator):
         super().__init__("mean")
 
     def __call__(self, sample: List[List[float]]) -> List[float]:
-        return [float(numpy.mean(sample[0]))]
+        if 1 < len(sample):
+            return [float(numpy.mean(sample[0]))]
+        else:
+            return [0]

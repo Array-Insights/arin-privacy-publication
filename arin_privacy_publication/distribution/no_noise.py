@@ -1,12 +1,16 @@
-from abc import ABC, abstractmethod
 from typing import List
 
-from arin_privacy_publication.base_noise import BaseNoise
+import numpy as np
+
+from arin_privacy_publication.distribution.base_distribution import BaseDistribution
 
 
-class NoNoise(BaseNoise):
+class NoNoise(BaseDistribution):
     def __init__(self):
-        super().__init__(0)
+        super().__init__("no noise")
+
+    def _sample(self, mean: float, standard_deviation: float, count: int) -> List[float]:
+        return np.zeros(count).tolist()
 
     def __call__(self, sample: List[List[float]]) -> List[List[float]]:
         return sample
