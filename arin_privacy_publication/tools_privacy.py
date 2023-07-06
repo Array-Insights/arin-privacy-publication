@@ -3,21 +3,21 @@ from typing import List, Optional
 
 import numpy as np
 
-from arin_privacy_publication.base_distance import BaseDistance
-from arin_privacy_publication.base_noise import BaseNoise
-from arin_privacy_publication.base_statistic import BaseStatistic
-from arin_privacy_publication.no_noise import NoNoise
-from arin_privacy_publication.normal_distribution_generator import NormalDistributionGenerator
-from arin_privacy_publication.student_t_test_statistic import StudentTTestStatistic
+from arin_privacy_publication.distance.base_distance import BaseDistance
+from arin_privacy_publication.distribution.base_distribution import BaseDistribution
+from arin_privacy_publication.distribution.no_noise import NoNoise
+from arin_privacy_publication.distribution.normal import Normal
+from arin_privacy_publication.estimator.base_estimator import BaseEstimator
+from arin_privacy_publication.estimator.student_t_test import StudentTTestStatistic
 
 
 def compute_privacy_dmr(
     k: int,
-    d: List[float],
+    d: List[List[float]],
     r: float,
     f: BaseDistance,
-    s: BaseStatistic,
-    noise: Optional[BaseNoise] = None,
+    s: BaseEstimator,
+    noise: Optional[BaseDistribution] = None,
 ) -> float:
     """
     Compute the privacy DMR between two distributions.
