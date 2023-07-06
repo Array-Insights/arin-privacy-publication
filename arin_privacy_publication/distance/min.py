@@ -5,7 +5,7 @@ import numpy
 from arin_privacy_publication.base_distance import BaseDistance
 
 
-class MinDistance(BaseDistance):
+class Min(BaseDistance):
     def __init__(self):
         pass
 

@@ -2,11 +2,11 @@ from typing import List
 
 import numpy
 
-from arin_privacy_publication.base_statistic import BaseStatistic
+from arin_privacy_publication.estimator.base_estimator import BaseEstimator
 
 
-class MultyStatistic(BaseStatistic):
-    def __init__(self, list_statistic: List[BaseStatistic]):
+class Multy(BaseEstimator):
+    def __init__(self, list_statistic: List[BaseEstimator]):
         self.statistic_name = "multy"
         self.list_statistic = list_statistic
 

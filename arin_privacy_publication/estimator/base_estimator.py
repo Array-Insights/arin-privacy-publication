@@ -2,12 +2,12 @@ from abc import ABC, abstractmethod
 from typing import List
 
 
-class BaseStatistic(ABC):
+class BaseEstimator(ABC):
 
     # Abstract class for statistics.
 
-    def __init__(self):
-        pass
+    def __init__(self, estimator_name: str):
+        self.estimator_name = estimator_name
 
     @abstractmethod
     def __call__(self, sample: List[List[float]]) -> List[float]:

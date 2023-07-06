@@ -2,10 +2,10 @@ from typing import List
 
 import numpy
 
-from arin_privacy_publication.base_statistic import BaseStatistic
+from arin_privacy_publication.estimator.base_estimator import BaseEstimator
 
 
-class VarianceStatistic(BaseStatistic):
+class Variance(BaseEstimator):
     def __init__(self):
         self.statistic_name = "variance"
 

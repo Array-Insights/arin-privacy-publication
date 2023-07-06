@@ -5,7 +5,7 @@ import numpy
 from arin_privacy_publication.base_distance import BaseDistance
 
 
-class MseDistance(BaseDistance):
+class Mse(BaseDistance):
     def __init__(self):
         pass
 

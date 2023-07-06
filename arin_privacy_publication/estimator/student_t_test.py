@@ -3,10 +3,10 @@ from typing import List
 import numpy
 import scipy
 
-from arin_privacy_publication.base_statistic import BaseStatistic
+from arin_privacy_publication.estimator.base_estimator import BaseEstimator
 
 
-class StudentTTestStatistic(BaseStatistic):
+class StudentTTestStatistic(BaseEstimator):
     def __init__(self, alternative: str = "less"):
         self.statistic_name = "t-test"
         self.alternative = alternative
