@@ -7,10 +7,21 @@ from arin_privacy_publication.distribution.base_distribution import BaseDistribu
 
 class NoNoise(BaseDistribution):
     def __init__(self):
-        super().__init__("no noise")
+        super().__init__("no noise", [], [])
 
-    def _sample(self, mean: float, standard_deviation: float, count: int) -> List[float]:
+    def _sample(
+        self,
+        count: int,
+        mean: float,
+        standard_deviation: float,
+    ) -> List[float]:
         return np.zeros(count).tolist()
 
-    def __call__(self, sample: List[List[float]]) -> List[List[float]]:
-        return sample
+    def to_dict(self) -> dict:
+        return {
+            "type": self.__class__.__name__,
+        }
+
+    @staticmethod
+    def from_dict(jsondict: dict) -> "BaseDistribution":
+        return NoNoise()

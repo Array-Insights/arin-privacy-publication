@@ -6,21 +6,24 @@ from arin_privacy_publication.distribution.base_distribution import BaseDistribu
 
 
 class Laplace(BaseDistribution):
-    def __init__(self):
-        super().__init__("laplace")
+    def __init__(self, list_mean: List[float], list_standard_deviation: List[float]):
+        super().__init__("laplace", list_mean, list_standard_deviation)
 
     def _sample(
         self,
-        mean: List[float],
-        standard_deviation: List[float],
-        count: List[int],
+        count: int,
+        mean: float,
+        standard_deviation: float,
     ) -> List[float]:
+        return np.random.laplace(mean, standard_deviation / np.sqrt(2), count).tolist()
 
-        return np.random.laplace(mean, standard_deviation / np.sqrt(2), count)
+    def to_dict(self) -> dict:
+        return {
+            "type": self.__class__.__name__,
+            "list_mean": self.list_mean,
+            "list_standard_deviation": self.list_standard_deviation,
+        }
 
-    def __call__(self, sample: List[List[float]]) -> List[List[float]]:
-        for i in range(len(sample)):
-            noise = np.random.laplace(0.0, self.std_multiplier / np.sqrt(2), len(sample[i]))
-            sample[i] = (np.array(sample[i]) + noise).tolist()
-
-        return sample
+    @staticmethod
+    def from_dict(jsondict: dict) -> "BaseDistribution":
+        return Laplace(jsondict["list_mean"], jsondict["list_standard_deviation"])

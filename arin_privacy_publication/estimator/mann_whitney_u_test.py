@@ -7,10 +7,9 @@ from arin_privacy_publication.distribution.laplace import Laplace
 from arin_privacy_publication.estimator.base_estimator import BaseEstimator
 
 
-class StudentTTest(BaseEstimator):
+class MannWhitneyUTest(BaseEstimator):
     def __init__(self, alternative: str = "less", epsilon: float = 0):
-        super().__init__("Student T-test")
-        # TODO epsilon 0 is infitite noise epsilon infinite is zero noise
+        super().__init__("Welch T-test")
         self.alternative = alternative
         self.epsilon = epsilon
         if epsilon < 0:
@@ -22,17 +21,17 @@ class StudentTTest(BaseEstimator):
             sdev_1 = dataset[dataset.columns[1]].std()
             distribution = Laplace([0, 0], [sdev_0 * self.epsilon, sdev_1 * self.epsilon])
             dataset = distribution.add(dataset)
+        # do mann whitney test instead of welch t test
 
-        return scipy.stats.ttest_ind(
+        return scipy.stats.mannwhitneyu(
             dataset[dataset.columns[0]],
             dataset[dataset.columns[1]],
-            equal_var=True,
             alternative=self.alternative,
         )
 
     @staticmethod
     def from_dict(jsondict: dict) -> "BaseEstimator":
-        return StudentTTest(alternative=jsondict["alternative"], epsilon=jsondict["epsilon"])
+        return MannWhitneyUTest(alternative=jsondict["alternative"], epsilon=jsondict["epsilon"])
 
     def to_dict(self) -> dict:
         return {

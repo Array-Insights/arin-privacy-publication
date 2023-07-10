@@ -7,11 +7,24 @@ from arin_privacy_publication.distribution.base_distribution import BaseDistribu
 
 
 class Normal(BaseDistribution):
-    def __init__(self):
-        self.generator_name = "normal distribution"
+    def __init__(self, list_mean: List[float], list_standard_deviation: List[float]):
+        super().__init__("Normal", list_mean, list_standard_deviation)
 
-    def _sample(self, mean: float, standard_deviation: float, count: int) -> List[float]:
+    def _sample(
+        self,
+        count: int,
+        mean: float,
+        standard_deviation: float,
+    ) -> List[float]:
         return np.random.normal(mean, standard_deviation, count).tolist()
 
-    def __call__(sample: List[List[float]]):
-        return random.normalvariate(0, 1)
+    def to_dict(self) -> dict:
+        return {
+            "type": self.__class__.__name__,
+            "list_mean": self.list_mean,
+            "list_standard_deviation": self.list_standard_deviation,
+        }
+
+    @staticmethod
+    def from_dict(jsondict: dict) -> "BaseDistribution":
+        return Normal(jsondict["list_mean"], jsondict["list_standard_deviation"])

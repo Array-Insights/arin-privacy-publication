@@ -1,6 +1,7 @@
 from typing import List
 
 import numpy
+from pandas import DataFrame
 
 from arin_privacy_publication.estimator.base_estimator import BaseEstimator
 
@@ -9,14 +10,14 @@ class Max(BaseEstimator):
     def __init__(self):
         self.statistic_name = "max"
 
-    def globel_sensitivity(self):
+    def global_sensitivity(self):
         return 1
 
-    def localglobel_sensitivity(self, sample: List[List[float]]):
+    def local_sensitivity(self, dataset: DataFrame):
         return 1
 
-    def __call__(self, sample: List[List[float]]) -> List[float]:
-        if 1 < len(sample):
-            return [float(numpy.max(sample[0]))]
+    def __call__(self, dataset: DataFrame) -> List[float]:
+        if 1 < len(dataset):
+            return [float(numpy.max(dataset[dataset.columns[0]]))]
         else:
             return [0]
