@@ -31,7 +31,7 @@ class BaseDistribution(ABC):
         dataset = DataFrame()
         for mean, standard_deviation in zip(self.list_mean, self.list_standard_deviation):
             sample = self._sample(count, mean, standard_deviation)
-            dataset[f"series_{len(dataset)}"] = sample
+            dataset[f"series_{len(dataset.columns)}"] = sample
         return dataset
 
     def add(
@@ -49,9 +49,11 @@ class BaseDistribution(ABC):
     def from_dict(jsondict: dict) -> "BaseDistribution":
 
         # from arin_privacy_publication.distribution.uniform import Uniform
+        from arin_privacy_publication.distribution.exponential import Exponential
         from arin_privacy_publication.distribution.laplace import Laplace
         from arin_privacy_publication.distribution.no_noise import NoNoise
         from arin_privacy_publication.distribution.normal import Normal
+        from arin_privacy_publication.distribution.uniform import Uniform
 
         if jsondict["type"] == Normal.__name__:
             return Normal.from_dict(jsondict)
@@ -59,5 +61,9 @@ class BaseDistribution(ABC):
             return NoNoise.from_dict(jsondict)
         elif jsondict["type"] == Laplace.__name__:
             return Laplace.from_dict(jsondict)
+        elif jsondict["type"] == Exponential.__name__:
+            return Exponential.from_dict(jsondict)
+        elif jsondict["type"] == Uniform.__name__:
+            return Uniform.from_dict(jsondict)
         else:
             raise ValueError(f"Unknown distribution name: {jsondict['type']}")

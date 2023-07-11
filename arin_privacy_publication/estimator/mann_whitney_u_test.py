@@ -9,7 +9,7 @@ from arin_privacy_publication.estimator.base_estimator import BaseEstimator
 
 class MannWhitneyUTest(BaseEstimator):
     def __init__(self, alternative: str = "less", epsilon: float = 0):
-        super().__init__("Welch T-test")
+        super().__init__("Mann Whitney U-Test")
         self.alternative = alternative
         self.epsilon = epsilon
         if epsilon < 0:

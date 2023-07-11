@@ -8,7 +8,7 @@ from arin_privacy_publication.estimator.base_estimator import BaseEstimator
 
 class Mean(BaseEstimator):
     def __init__(self):
-        super().__init__("mean")
+        super().__init__("Mean")
 
     def __call__(self, dataset: DataFrame) -> List[float]:
         if 1 < len(dataset):

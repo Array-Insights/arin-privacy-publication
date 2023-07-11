@@ -8,7 +8,7 @@ from arin_privacy_publication.estimator.base_estimator import BaseEstimator
 
 class Max(BaseEstimator):
     def __init__(self):
-        self.statistic_name = "max"
+        super().__init__("Max")
 
     def global_sensitivity(self):
         return 1
@@ -21,3 +21,10 @@ class Max(BaseEstimator):
             return [float(numpy.max(dataset[dataset.columns[0]]))]
         else:
             return [0]
+
+    @staticmethod
+    def from_dict(jsondict: dict) -> "BaseEstimator":
+        return Max()
+
+    def to_dict(self) -> dict:
+        return {"type": self.__class__.__name__}

@@ -7,12 +7,25 @@ from arin_privacy_publication.estimator.base_estimator import BaseEstimator
 
 
 class Multy(BaseEstimator):
-    def __init__(self, list_statistic: List[BaseEstimator]):
-        self.statistic_name = "multy"
-        self.list_statistic = list_statistic
+    def __init__(self, list_estimator: List[BaseEstimator]):
+        super().__init__("Multy")
+        self.list_estimator = list_estimator
 
     def __call__(self, dataset: DataFrame) -> List[float]:
         list_result = []
-        for statistic in self.list_statistic:
-            list_result.extend(statistic(dataset))
+        for estimator in self.list_estimator:
+            list_result.extend(estimator(dataset))
         return list_result
+
+    @staticmethod
+    def from_dict(jsondict: dict) -> "BaseEstimator":
+        list_estimator = []
+        for estimator in jsondict["list_estimator"]:
+            list_estimator.append(BaseEstimator.from_dict(estimator))
+        return Multy(list_estimator)
+
+    def to_dict(self) -> dict:
+        list_estimator = []
+        for estimator in self.list_estimator:
+            list_estimator.append(estimator.to_dict())
+        return {"type": self.__class__.__name__, "list_estimator": list_estimator}

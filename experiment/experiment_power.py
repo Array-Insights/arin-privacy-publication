@@ -13,12 +13,7 @@ from arin_privacy_publication.estimator.multy import Multy
 from arin_privacy_publication.estimator.student_t_test import StudentTTest
 from arin_privacy_publication.estimator.variance import Variance
 from arin_privacy_publication.estimator.welch_t_test import WelchTTest
-from arin_privacy_publication.tools_privacy import (
-    compute_power,
-    compute_privacy_dmr,
-    create_experiment_power,
-    run_experiment,
-)
+from arin_privacy_publication.tools_experiment import create_experiment_power, run_experiment
 
 
 # Experiment 1
