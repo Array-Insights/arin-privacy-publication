@@ -19,12 +19,12 @@ def sha256_dict(dict: dict) -> str:
     return sha256(json.dumps(dict).encode()).hexdigest()
 
 
-def run_experiment(dict_experiment: dict) -> dict:
+def run_experiment(dict_experiment: dict, ignore_cache: bool = False) -> dict:
     if not os.path.isdir("experiment_cache"):
         os.mkdir("experiment_cache")
     experiment_hash = sha256_dict(dict_experiment)
     path_file_experiment = os.path.join("experiment_cache", experiment_hash + ".json")
-    if os.path.exists(path_file_experiment):
+    if os.path.exists(path_file_experiment) and not ignore_cache:
         with open(path_file_experiment, "r") as file:
             return json.load(file)
     else:

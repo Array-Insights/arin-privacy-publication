@@ -1,5 +1,6 @@
 from pandas import DataFrame
 
+from arin_privacy_publication.distribution.csv import Csv
 from arin_privacy_publication.distribution.exponential import Exponential
 from arin_privacy_publication.distribution.laplace import Laplace
 from arin_privacy_publication.distribution.normal import Normal
@@ -10,6 +11,7 @@ list_data_generator = [
     Laplace([0, 1], [1, 2]),
     Uniform([0, 1], [1, 2]),
     Exponential([0, 1], [1, 2]),
+    Csv([0, 1], [1, 2], "kidney_disease.csv", ["age", "bp"]),
 ]
 
 for data_generator in list_data_generator:

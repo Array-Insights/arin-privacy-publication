@@ -49,6 +49,7 @@ class BaseDistribution(ABC):
     def from_dict(jsondict: dict) -> "BaseDistribution":
 
         # from arin_privacy_publication.distribution.uniform import Uniform
+        from arin_privacy_publication.distribution.csv import Csv
         from arin_privacy_publication.distribution.exponential import Exponential
         from arin_privacy_publication.distribution.laplace import Laplace
         from arin_privacy_publication.distribution.no_noise import NoNoise
@@ -65,5 +66,7 @@ class BaseDistribution(ABC):
             return Exponential.from_dict(jsondict)
         elif jsondict["type"] == Uniform.__name__:
             return Uniform.from_dict(jsondict)
+        elif jsondict["type"] == "Csv":
+            return Csv.from_dict(jsondict)
         else:
             raise ValueError(f"Unknown distribution name: {jsondict['type']}")
