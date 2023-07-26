@@ -12,6 +12,10 @@ class BaseEstimator(ABC):
         self.estimator_name = estimator_name
 
     @abstractmethod
+    def sensitivity(self, dataset: DataFrame) -> float:
+        raise NotImplementedError()
+
+    @abstractmethod
     def __call__(self, dataset: DataFrame) -> List[float]:
         raise NotImplementedError()
 

@@ -10,11 +10,10 @@ class Max(BaseEstimator):
     def __init__(self):
         super().__init__("Max")
 
-    def global_sensitivity(self):
-        return 1
-
-    def local_sensitivity(self, dataset: DataFrame):
-        return 1
+    def sensitivity(self, dataset: DataFrame) -> float:
+        list_value = sorted(dataset[dataset.columns[0]])
+        # differnce between max and second max
+        return float(list_value[-1] - list_value[-2])
 
     def __call__(self, dataset: DataFrame) -> List[float]:
         if 1 < len(dataset):

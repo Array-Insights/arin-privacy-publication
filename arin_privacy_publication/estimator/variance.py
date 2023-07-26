@@ -10,6 +10,16 @@ class Variance(BaseEstimator):
     def __init__(self):
         super().__init__("Variance")
 
+    def sensitivity(self, dataset: DataFrame) -> float:
+        list_value = sorted(dataset[dataset.columns[0]])
+        # the max increas in varriance is by droppign the min or the max (whichever is more distant from the mean)
+        # this will shift the mean up but also remove our most extreme error
+        # it is easier to try this out than to derive the equation (it would not look very nice anyway)
+        var_current = numpy.var(list_value)
+        var_change_min = float(abs(var_current - numpy.var(list_value[1:])))
+        var_change_max = float(abs(var_current - numpy.var(list_value[:-1])))
+        return max([var_change_min, var_change_max])
+
     def __call__(self, dataset: DataFrame) -> List[float]:
 
         if 1 < len(dataset):

@@ -1,3 +1,5 @@
+import random
+
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy
@@ -13,7 +15,7 @@ from arin_privacy_publication.estimator.multy import Multy
 from arin_privacy_publication.estimator.student_t_test import StudentTTest
 from arin_privacy_publication.estimator.variance import Variance
 from arin_privacy_publication.estimator.welch_t_test import WelchTTest
-from arin_privacy_publication.tools_experiment import create_experiment_power, run_experiment
+from arin_privacy_publication.tools_experiment import create_experiment_dmr, create_experiment_power, run_experiment
 
 
 # Experiment 1
@@ -21,35 +23,52 @@ def experiment_power():
 
     print(scipy.stats.ttest_ind([0, 1, 2], [2, 3, 4], equal_var=True))
     sample_size = 200
-
-    list_effect_size = np.arange(-0.2, 0.5, 0.02)
-    list_epsilon = [0.0, 0.5]
-    run_count = 5000
-    plt.figure()
-    list_legend = []
+    effect_size = 0.3
+    list_epsilon = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3, 3.5, 4.0]
+    list_reference_rate = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+    run_count = 1000
+    data_generator = Normal([0, effect_size], [1, 1])
+    distance = MinSquared()
+    list_experiment = []
     for epsilon in list_epsilon:
-        list_test = [StudentTTest(epsilon=epsilon), WelchTTest(epsilon=epsilon), MannWhitneyUTest(epsilon=epsilon)]
-        list_list_power = []
+        list_test = [StudentTTest(epsilon=epsilon), MannWhitneyUTest(epsilon=epsilon)]
         for test in list_test:
-            list_power = []
-            for effect_size in tqdm(list_effect_size):
-                data_generator = Normal([0, effect_size], [1, 1])
-                experiment = create_experiment_power(test, data_generator, sample_size, 0.05, run_count)
-                result = run_experiment(experiment)
-                power = result["power_mean"]
-                list_power.append(power)
-            list_list_power.append(list_power)
+            experiment = create_experiment_power(test, data_generator, sample_size, 0.05, run_count)
+            list_experiment.append(experiment)
 
-        # plt.style.use(["science", "ieee"])
+            experiment = create_experiment_dmr(
+                data_generator, sample_size, run_count, distance, test, list_reference_rate
+            )
+            list_experiment.append(experiment)
+    random.shuffle(list_experiment)  # shuffle so not all the long experiments are at the end.
+    # Improves duration estimation
+    for experiment in tqdm(list_experiment):  # TODO make this parallel
+        run_experiment(experiment)
 
-        for list_power in list_list_power:
-            plt.plot(list_effect_size, list_power)
-        plt.xlabel("Effect size (in sdev)")
-        plt.ylabel("Power")
-        list_legend.append(f"Student's t-test, epsilon={epsilon}")
-        list_legend.append(f"Welch's t-test epsilon={epsilon}")
-        list_legend.append(f"Mann-Whitney U-test epsilon={epsilon}")
-    plt.legend(list_legend)
+    plt.figure()
+    list_test = [StudentTTest(epsilon=0), MannWhitneyUTest(epsilon=0)]
+    for test in list_test:
+        list_power = []
+        list_dmr_auc = []
+        for epsilon in list_epsilon:
+            test.epsilon = epsilon
+            experiment = create_experiment_power(test, data_generator, sample_size, 0.05, run_count)
+            result = run_experiment(experiment)
+            power_mean = result["result"]["power_mean"]
+            experiment = create_experiment_dmr(
+                data_generator, sample_size, run_count, distance, test, list_reference_rate
+            )
+            result = run_experiment(experiment)
+            dmr_auc = result["result"]["dmr_auc"]
+
+            list_power.append(power_mean)
+            list_dmr_auc.append(dmr_auc)
+
+        plt.plot(list_epsilon, list_power, label=(test.estimator_name + " power"))
+        plt.plot(list_epsilon, list_dmr_auc, label=(test.estimator_name + " DMR auc"))
+    plt.xlabel("epsilon")
+    plt.ylabel("Power")
+    plt.legend()
     plt.show()
 
 

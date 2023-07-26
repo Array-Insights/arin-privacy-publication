@@ -20,13 +20,14 @@ from arin_privacy_publication.tools_privacy import compute_privacy_dmr
 # Experiment 1
 def experiment_sample_size():
     list_reference_rate = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-    run_count = 1000  # setting this value to 50000 takes a long time to run (60min+)
+    run_count = 10000  # setting this value to 50000 takes a long time to run (60min+)
     distance = MinSquared()
     list_sample_size = [50, 100, 150, 200, 250, 300, 400, 500, 600]
+    ignore_cache = False
     #
     data_generator = Normal([0, 1], [1, 1])
-    # list_estimator = [Mean(), Max(), Variance(), Multy([Mean(), Max(), Variance()])]
-    list_estimator = [Mean()]
+    list_estimator = [Mean(), Max(), Variance(), Multy([Mean(), Max(), Variance()])]
+    # list_estimator = [Mean()]
 
     list_experiment = []
     for estimator in list_estimator:
@@ -39,7 +40,7 @@ def experiment_sample_size():
     random.shuffle(list_experiment)  # shuffle so not all the long experiments are at the end.
     # Improves duration estimation
     for experiment in tqdm(list_experiment):  # TODO make this parallel
-        run_experiment(experiment)
+        run_experiment(experiment, ignore_cache)
 
     # list_estimator = [Mean()]
     plt.figure(figsize=(10, 5))
@@ -60,20 +61,10 @@ def experiment_sample_size():
     plt.legend()
     # plt.show()
 
-    # prepare the experiments
-    list_experiment = []
-    for estimator in list_estimator:
-        list_auc_dmr = []
-        for sample_size in tqdm(list_sample_size):
-            experiment = create_experiment_dmr(
-                data_generator, sample_size, run_count, distance, estimator, list_reference_rate
-            )
-            list_experiment.append(experiment)
-
     random.shuffle(list_experiment)  # shuffle so not all the long experiments are at the end.
     # Improves duration estimation
     for experiment in tqdm(list_experiment):  # TODO make this parallel
-        run_experiment(experiment)
+        run_experiment(experiment, ignore_cache=ignore_cache)
 
     # plot the results
     plt.figure(figsize=(10, 5))

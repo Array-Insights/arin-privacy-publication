@@ -33,8 +33,10 @@ def run_experiment(dict_experiment: dict, ignore_cache: bool = False) -> dict:
             result = run_experiment_power(dict_experiment)
         elif experiment_type == "dmr":
             result = run_experiment_dmr(dict_experiment)
+        elif experiment_type == "sensitivity":
+            result = run_experiment_sensitivity(dict_experiment)
         else:
-            raise ValueError("Unknown experiment type {experiment_type}")
+            raise ValueError(f"Unknown experiment type {experiment_type}")
         with open(path_file_experiment, "w") as file:
             json.dump(result, file)
         return result
@@ -116,6 +118,39 @@ def run_experiment_dmr(experiment: dict) -> dict:
     result["result"] = {}
     result["result"]["list_dmr"] = list_dmr
     result["result"]["dmr_auc"] = dmr_auc
+    return result
+
+
+def create_experiment_sensitivity(
+    data_generator: BaseDistribution,
+    sample_size: int,
+    run_count: int,
+    estimator: BaseEstimator,
+) -> dict:
+    experiment = {}
+    experiment["experiment_type"] = "sensitivity"
+    experiment["data_generator"] = data_generator.to_dict()
+    experiment["sample_size"] = sample_size
+    experiment["run_count"] = run_count
+    experiment["estimator"] = estimator.to_dict()
+    return experiment
+
+
+def run_experiment_sensitivity(experiment: dict) -> dict:
+    data_generator: BaseDistribution = BaseDistribution.from_dict(experiment["data_generator"])
+    sample_size: int = experiment["sample_size"]
+    run_count: int = experiment["run_count"]
+    estimator: BaseEstimator = BaseEstimator.from_dict(experiment["estimator"])
+
+    dataset = data_generator.sample(sample_size)
+    list_sensitivity = []
+    for _ in range(run_count):
+        list_sensitivity.append(estimator.sensitivity(dataset))
+
+    result = experiment.copy()
+    result["result"] = {}
+    result["result"]["sensitivity_sdev"] = float(np.std(list_sensitivity))
+    result["result"]["sensitivity_mean"] = float(np.mean(list_sensitivity))
     return result
 
 

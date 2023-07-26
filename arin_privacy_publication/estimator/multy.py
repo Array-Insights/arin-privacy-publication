@@ -11,6 +11,13 @@ class Multy(BaseEstimator):
         super().__init__("Multy")
         self.list_estimator = list_estimator
 
+    def sensitivity(self, dataset: DataFrame) -> float:
+        # sum of all estimator sensitivities
+        sum_sensitivity = 0
+        for estimator in self.list_estimator:
+            sum_sensitivity += estimator.sensitivity(dataset)
+        return sum_sensitivity
+
     def __call__(self, dataset: DataFrame) -> List[float]:
         list_result = []
         for estimator in self.list_estimator:

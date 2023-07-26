@@ -104,8 +104,7 @@ def experiment_distribution():
         np.array(list_estimator_drm_auc_mean) - np.array(list_estimator_drm_auc_min),
         np.array(list_estimator_drm_auc_max) - np.array(list_estimator_drm_auc_mean),
     ]
-    print(list_estimator_name)
-    print(y_error)
+    # TODO boxplot?
     # plotting graph
     plt.bar(list_estimator_name, list_estimator_drm_auc_mean)
 
