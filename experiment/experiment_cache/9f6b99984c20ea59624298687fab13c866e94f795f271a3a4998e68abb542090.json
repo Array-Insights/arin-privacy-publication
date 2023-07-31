@@ -1,0 +1,1 @@
+{"experiment_type": "sensitivity", "data_generator": {"type": "Laplace", "list_mean": [0, 1], "list_standard_deviation": [5, 5]}, "sample_size": 200, "run_count": 1000, "estimator": {"type": "Mean"}, "result": {"sensitivity_sdev": 2.7755575615628914e-17, "sensitivity_mean": 0.08536427564078156}}

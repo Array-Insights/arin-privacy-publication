@@ -1,8 +1,6 @@
 import random
 
 import matplotlib.pyplot as plt
-import numpy as np
-import scipy
 from tqdm import tqdm
 
 from arin_privacy_publication.distance.min_squared import MinSquared
@@ -19,9 +17,8 @@ from arin_privacy_publication.tools_experiment import create_experiment_dmr, cre
 
 
 # Experiment 1
-def experiment_power():
+def experiment_power(do_run: bool, do_plot: bool, do_show: bool):
 
-    print(scipy.stats.ttest_ind([0, 1, 2], [2, 3, 4], equal_var=True))
     sample_size = 200
     effect_size = 0.3
     list_epsilon = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3, 3.5, 4.0]
@@ -29,48 +26,50 @@ def experiment_power():
     run_count = 1000
     data_generator = Normal([0, effect_size], [1, 1])
     distance = MinSquared()
-    list_experiment = []
-    for epsilon in list_epsilon:
-        list_test = [StudentTTest(epsilon=epsilon), MannWhitneyUTest(epsilon=epsilon)]
-        for test in list_test:
-            experiment = create_experiment_power(test, data_generator, sample_size, 0.05, run_count)
-            list_experiment.append(experiment)
-
-            experiment = create_experiment_dmr(
-                data_generator, sample_size, run_count, distance, test, list_reference_rate
-            )
-            list_experiment.append(experiment)
-    random.shuffle(list_experiment)  # shuffle so not all the long experiments are at the end.
-    # Improves duration estimation
-    for experiment in tqdm(list_experiment):  # TODO make this parallel
-        run_experiment(experiment)
-
-    plt.figure()
-    list_test = [StudentTTest(epsilon=0), MannWhitneyUTest(epsilon=0)]
-    for test in list_test:
-        list_power = []
-        list_dmr_auc = []
+    if do_run:
+        list_experiment = []
         for epsilon in list_epsilon:
-            test.epsilon = epsilon
-            experiment = create_experiment_power(test, data_generator, sample_size, 0.05, run_count)
-            result = run_experiment(experiment)
-            power_mean = result["result"]["power_mean"]
-            experiment = create_experiment_dmr(
-                data_generator, sample_size, run_count, distance, test, list_reference_rate
-            )
-            result = run_experiment(experiment)
-            dmr_auc = result["result"]["dmr_auc"]
+            list_test = [StudentTTest(epsilon=epsilon), MannWhitneyUTest(epsilon=epsilon)]
+            for test in list_test:
+                experiment = create_experiment_power(test, data_generator, sample_size, 0.05, run_count)
+                list_experiment.append(experiment)
 
-            list_power.append(power_mean)
-            list_dmr_auc.append(dmr_auc)
+                experiment = create_experiment_dmr(
+                    data_generator, sample_size, run_count, distance, test, list_reference_rate
+                )
+                list_experiment.append(experiment)
+        random.shuffle(list_experiment)  # shuffle so not all the long experiments are at the end.
+        # Improves duration estimation
+        for experiment in tqdm(list_experiment):  # TODO make this parallel
+            run_experiment(experiment)
+    if do_plot:
+        plt.figure()
+        list_test = [StudentTTest(epsilon=0), MannWhitneyUTest(epsilon=0)]
+        for test in list_test:
+            list_power = []
+            list_dmr_auc = []
+            for epsilon in list_epsilon:
+                test.epsilon = epsilon
+                experiment = create_experiment_power(test, data_generator, sample_size, 0.05, run_count)
+                result = run_experiment(experiment)
+                power_mean = result["result"]["power_mean"]
+                experiment = create_experiment_dmr(
+                    data_generator, sample_size, run_count, distance, test, list_reference_rate
+                )
+                result = run_experiment(experiment)
+                dmr_auc = result["result"]["dmr_auc"]
 
-        plt.plot(list_epsilon, list_power, label=(test.estimator_name + " power"))
-        plt.plot(list_epsilon, list_dmr_auc, label=(test.estimator_name + " DMR auc"))
-    plt.xlabel("epsilon")
-    plt.ylabel("Power")
-    plt.legend()
-    plt.show()
+                list_power.append(power_mean)
+                list_dmr_auc.append(dmr_auc)
+
+            plt.plot(list_epsilon, list_power, label=(test.estimator_name + " power"))
+            plt.plot(list_epsilon, list_dmr_auc, label=(test.estimator_name + " DMR auc"))
+        plt.xlabel("epsilon")
+        plt.ylabel("Power")
+        plt.legend()
+    if do_show:
+        plt.show()
 
 
 if __name__ == "__main__":
-    experiment_power()
+    experiment_power(True, True, True)
