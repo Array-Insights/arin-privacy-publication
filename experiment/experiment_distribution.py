@@ -37,7 +37,7 @@ def experiment_distribution(do_run: bool, do_plot: bool, do_show: bool):
         Exponential([0, 1], [5, 5]),
         Csv([0, 1], [5, 5], "kidney_disease.csv", ["age", "bp"]),
     ]
-    list_estimator = [Mean(), Max(), Variance(), Multy([Mean(), Max(), Variance()]), WelchTTest(), MannWhitneyUTest()]
+    list_estimator = [Mean(), Max(), Variance(), Multy([Mean(), Max(), Variance()])]
     # list_estimator = [Max()]
     if do_run:
         list_experiment = []
@@ -58,6 +58,7 @@ def experiment_distribution(do_run: bool, do_plot: bool, do_show: bool):
         list_estimator_drm_auc_mean = []
         list_estimator_drm_auc_min = []
         list_estimator_drm_auc_max = []
+        list_estimator_list_drm_auc = []
         for estimator in list_estimator:
             list_dmr_auc = []
             for data_generator in list_data_generator:
@@ -71,6 +72,7 @@ def experiment_distribution(do_run: bool, do_plot: bool, do_show: bool):
             list_estimator_drm_auc_mean.append(np.mean(list_dmr_auc))
             list_estimator_drm_auc_min.append(np.min(list_dmr_auc))
             list_estimator_drm_auc_max.append(np.max(list_dmr_auc))
+            list_estimator_list_drm_auc.append(list_dmr_auc)
 
         y_error = [
             np.array(list_estimator_drm_auc_mean) - np.array(list_estimator_drm_auc_min),
@@ -78,15 +80,44 @@ def experiment_distribution(do_run: bool, do_plot: bool, do_show: bool):
         ]
         # TODO boxplot?
         # plotting graph
-        plt.figure()
-        plt.bar(list_estimator_name, list_estimator_drm_auc_mean)
+        plt.figure(figsize=(8, 7))
+        plt.title("DMR-AUC for different estimators and distributions")
+        plt.boxplot(list_estimator_list_drm_auc, whis=8, labels=list_estimator_name, widths=0.9)
 
-        plt.errorbar(
-            list_estimator_name, list_estimator_drm_auc_mean, yerr=y_error, fmt="o", color="r"
-        )  # you can use color ="r" for red or skip to default as blue
+        # # Set the desired spacing between boxplots
+        # spacing = 0.5
+
+        # # Adjust whisker properties
+        # for whisker in boxplot["whiskers"]:
+        #     whisker.set_linestyle("-")
+        #     whisker.set_linewidth(1)
+
+        # # Adjust box properties
+        # for box in boxplot["boxes"]:
+        #     box.set_linewidth(2)
+
+        # # Adjust cap properties
+        # for cap in boxplot["caps"]:
+        #     cap.set_linewidth(1)
+
+        # # Adjust median properties
+        # for median in boxplot["medians"]:
+        #     median.set_linewidth(2)
+
+        # # Adjust flier properties
+        # for flier in boxplot["fliers"]:
+        #     flier.set_markerfacecolor("red")
+        #     flier.set_markeredgecolor("red")
+
+        # plt.bar(list_estimator_name, list_estimator_drm_auc_mean)
+
+        # plt.errorbar(
+        #     list_estimator_name, list_estimator_drm_auc_mean, yerr=y_error, fmt="o", color="r"
+        # )  # you can use color ="r" for red or skip to default as blue
+
+        plt.subplots_adjust(left=0.1, right=0.8, bottom=0.1, top=0.9)
         plt.xlabel("Estimator")
-        plt.ylabel("DMR AUC")
-        plt.ylim(0.5, 1.0)
+        plt.ylabel("DMR-AUC")
     if do_show:
         plt.show()
 

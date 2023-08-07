@@ -1,1 +1,1 @@
-{"experiment_type": "sensitivity", "data_generator": {"type": "Normal", "list_mean": [0, 1], "list_standard_deviation": [5, 5]}, "sample_size": 200, "run_count": 1000, "estimator": {"type": "Max"}, "result": {"sensitivity_sdev": 1.7763568394002505e-15, "sensitivity_mean": 4.792189149595162}}
+{"experiment_type": "sensitivity", "data_generator": {"type": "Normal", "list_mean": [0, 1], "list_standard_deviation": [5, 5]}, "sample_size": 200, "run_count": 1000, "estimator": {"type": "Max"}, "result": {"sensitivity_sdev": 0.0, "sensitivity_mean": 0.4537242392057763}}

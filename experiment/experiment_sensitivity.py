@@ -35,7 +35,8 @@ def experiment_sensitivity(do_run: bool, do_plot: bool, do_show: bool) -> None:
         Exponential([0, 1], [5, 5]),
         Csv([0, 1], [5, 5], "kidney_disease.csv", ["age", "bp"]),
     ]
-    list_estimator = [Mean(), Max(), Variance()]
+    list_marker = ["x", "o", "v", "^", "s"]
+    list_estimator = [Mean(), Max(), Variance(), Multy([Mean(), Max(), Variance()])]
     if do_run:
         list_experiment = []
         for data_generator in list_data_generator:
@@ -53,42 +54,49 @@ def experiment_sensitivity(do_run: bool, do_plot: bool, do_show: bool) -> None:
             run_experiment(experiment, ignore_cache=ignore_cache)
 
     if do_plot:
-        plt.figure()
-        plt.title("sensitivity")
-        for data_generator in list_data_generator:
-            list_dmr_auc_mean = []
-            list_dmr_auc_sdev = []
+        plt.figure(figsize=(8, 7))
+        plt.title("Sensitivity for different estimators and distributions")
+        list_list_sensitivity_mean = []
+        list_data_generator_name = []
+        list_estimator_name = []
+        for estimator in list_estimator:
+            list_estimator_name.append(estimator.estimator_name)
             list_sensitivty_mean = []
-            list_sensitivty_sdev = []
+            for data_generator in list_data_generator:
+                list_data_generator_name.append(data_generator.distribution_name)
+                # list_dmr_auc_mean = []
+                # list_dmr_auc_sdev = []
 
-            for estimator in list_estimator:
+                # list_sensitivty_sdev = []
 
-                experiment = create_experiment_dmr(
-                    data_generator, sample_size, run_count, distance, estimator, list_reference_rate
-                )
-                result = run_experiment(experiment)
-                list_dmr_auc_mean.append(result["result"]["dmr_auc"])
+                # experiment = create_experiment_dmr(
+                #     data_generator, sample_size, run_count, distance, estimator, list_reference_rate
+                # )
+                # result = run_experiment(experiment)
+                # list_dmr_auc_mean.append(result["result"]["dmr_auc"])
                 # list_dmr_auc_sdev.append(result["result"]["dmr_auc_sdev"])
-                list_dmr_auc_sdev.append(0)
-                x = result["result"]["dmr_auc"]
+                # list_dmr_auc_sdev.append(0)
+                # x = result["result"]["dmr_auc"]
 
                 experiment = create_experiment_sensitivity(data_generator, sample_size, run_count, estimator)
                 result = run_experiment(experiment)
                 list_sensitivty_mean.append(result["result"]["sensitivity_mean"])
-                list_sensitivty_sdev.append(result["result"]["sensitivity_sdev"])
+                # list_sensitivty_sdev.append(result["result"]["sensitivity_sdev"])
 
                 y = result["result"]["sensitivity_mean"]
                 txt = f"{estimator.estimator_name}"
-                plt.annotate(txt, (x, y))
-
-            plt.scatter(list_dmr_auc_mean, list_sensitivty_mean, label=data_generator.distribution_name)
+                # plt.annotate(txt, (x, y))
+            list_list_sensitivity_mean.append(list_sensitivty_mean)
+            # plt.scatter(list_dmr_auc_mean, list_sensitivty_mean, label=data_generator.distribution_name, marker=marker)
 
         # creating erro
         # y_errormin = [0.1, 0.5, 0.9, 0.1, 0.9]
         # y_errormax = [0.2, 0.4, 0.6, 0.4, 0.2]
-        plt.xlabel("DMR AUC")
+
+        plt.boxplot(list_list_sensitivity_mean, whis=8, labels=list_estimator_name, widths=0.9)
+        plt.subplots_adjust(left=0.1, right=0.8, bottom=0.1, top=0.9)
+        plt.xlabel("Estimator")
         plt.ylabel("Sensitivity")
-        plt.legend()
 
     if do_show:
         plt.show()
