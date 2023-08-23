@@ -22,10 +22,10 @@ from arin_privacy_publication.tools_privacy import compute_privacy_dmr
 
 
 # Experiment 1
-def experiment_distribution(do_run: bool, do_plot: bool, do_show: bool):
+def experiment_distribution(do_run: bool, do_plot: bool, do_show: bool, do_save: bool):
 
     list_reference_rate = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-    run_count = 1000  # setting this value to 50000 takes a long time to run (60min+)
+    run_count = 10000  # setting this value to 50000 takes a long time to run (60min+)
     distance = MinSquared()
     sample_size = 200
     ignore_cache = False
@@ -39,6 +39,7 @@ def experiment_distribution(do_run: bool, do_plot: bool, do_show: bool):
     ]
     list_estimator = [Mean(), Max(), Variance(), Multy([Mean(), Max(), Variance()])]
     # list_estimator = [Max()]
+
     if do_run:
         list_experiment = []
         for estimator in list_estimator:
@@ -51,7 +52,7 @@ def experiment_distribution(do_run: bool, do_plot: bool, do_show: bool):
         random.shuffle(list_experiment)  # shuffle so not all the long experiments are at the end.
         # Improves duration estimation
         for experiment in tqdm(list_experiment):  # TODO make this parallel
-            run_experiment(experiment, ignore_cache=ignore_cache)
+            run_experiment(experiment, ignore_cache=True)
 
     if do_plot:
         list_estimator_name = []
@@ -73,16 +74,17 @@ def experiment_distribution(do_run: bool, do_plot: bool, do_show: bool):
             list_estimator_drm_auc_min.append(np.min(list_dmr_auc))
             list_estimator_drm_auc_max.append(np.max(list_dmr_auc))
             list_estimator_list_drm_auc.append(list_dmr_auc)
+            print(list_dmr_auc)
 
-        y_error = [
-            np.array(list_estimator_drm_auc_mean) - np.array(list_estimator_drm_auc_min),
-            np.array(list_estimator_drm_auc_max) - np.array(list_estimator_drm_auc_mean),
-        ]
+        # y_error = [
+        #     np.array(list_estimator_drm_auc_mean) - np.array(list_estimator_drm_auc_min),
+        #     np.array(list_estimator_drm_auc_max) - np.array(list_estimator_drm_auc_mean),
+        # ]
         # TODO boxplot?
         # plotting graph
-        plt.figure(figsize=(8, 7))
+        plt.figure(figsize=(5, 4))
         plt.title("DMR-AUC for different estimators and distributions")
-        plt.boxplot(list_estimator_list_drm_auc, whis=8, labels=list_estimator_name, widths=0.9)
+        plt.boxplot(list_estimator_list_drm_auc, whis=40, labels=list_estimator_name, widths=0.9)
 
         # # Set the desired spacing between boxplots
         # spacing = 0.5
@@ -121,6 +123,9 @@ def experiment_distribution(do_run: bool, do_plot: bool, do_show: bool):
     if do_show:
         plt.show()
 
+    if do_save:
+        plt.savefig("figure/distribution.png", dpi=300, bbox_inches="tight")
+
 
 if __name__ == "__main__":
-    experiment_distribution(True, True, True)
+    experiment_distribution(True, True, True, True)

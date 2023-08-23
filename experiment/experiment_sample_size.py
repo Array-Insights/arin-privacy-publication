@@ -5,21 +5,16 @@ import numpy as np
 from tqdm import tqdm
 
 from arin_privacy_publication.distance.min_squared import MinSquared
-from arin_privacy_publication.distribution.laplace import Laplace
 from arin_privacy_publication.distribution.normal import Normal
-from arin_privacy_publication.estimator.base_estimator import BaseEstimator
-from arin_privacy_publication.estimator.mann_whitney_u_test import MannWhitneyUTest
 from arin_privacy_publication.estimator.max import Max
 from arin_privacy_publication.estimator.mean import Mean
 from arin_privacy_publication.estimator.multy import Multy
 from arin_privacy_publication.estimator.variance import Variance
-from arin_privacy_publication.estimator.welch_t_test import WelchTTest
 from arin_privacy_publication.tools_experiment import create_experiment_dmr, run_experiment
-from arin_privacy_publication.tools_privacy import compute_privacy_dmr
 
 
 # Experiment 1
-def experiment_sample_size(do_run: bool, do_plot: bool, do_show: bool):
+def experiment_sample_size(do_run: bool, do_plot: bool, do_show: bool, do_save: bool) -> None:
     list_reference_rate = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     run_count = 10000  # setting this value to 50000 takes a long time to run (60min+)
     distance = MinSquared()
@@ -47,6 +42,8 @@ def experiment_sample_size(do_run: bool, do_plot: bool, do_show: bool):
         400,
         500,
         600,
+        800,
+        1000,
     ]
     # list_sample_size = [50, 100, 200, 300, 400, 600]
     list_line_style = ["-", "--", "-.", ":"]
@@ -72,7 +69,7 @@ def experiment_sample_size(do_run: bool, do_plot: bool, do_show: bool):
 
     # list_estimator = [Mean()]
     if do_plot:
-        plt.figure(figsize=(10, 5))
+        plt.figure(figsize=(6, 4))
         plt.title("Effect of sample size on DMR")
 
         for i, estimator in enumerate(list_estimator):
@@ -123,18 +120,21 @@ def experiment_sample_size(do_run: bool, do_plot: bool, do_show: bool):
             )
             array_auc_dmr_err = np.array([[array_auc_dmr - lower_bound], [upper_bound - array_auc_dmr]])
             array_auc_dmr_err = np.squeeze(array_auc_dmr_err)
-            plt.errorbar(list_sample_size, list_auc_dmr, yerr=array_auc_dmr_err, fmt="o", capsize=5)
+            # plt.errorbar(list_sample_size, list_auc_dmr, yerr=array_auc_dmr_err, fmt="o", capsize=5)
 
             plt.errorbar(list_sample_size, list_auc_dmr, label=plot_label)
 
         plt.xlabel("Sample size")
         plt.ylabel("DMR AUC")
         plt.title("Effect of sample size on DMR")
-        plt.legend()
+        plt.legend(loc="upper right")
 
     if do_show:
         plt.show()
 
+    if do_save:
+        plt.savefig("figure/sample_size.png", dpi=300, bbox_inches="tight")
+
 
 if __name__ == "__main__":
-    experiment_sample_size(True, True, True)
+    experiment_sample_size(True, True, True, True)

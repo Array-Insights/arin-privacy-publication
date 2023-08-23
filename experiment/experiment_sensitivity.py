@@ -22,7 +22,7 @@ from arin_privacy_publication.tools_experiment import (
 )
 
 
-def experiment_sensitivity(do_run: bool, do_plot: bool, do_show: bool) -> None:
+def experiment_sensitivity(do_run: bool, do_plot: bool, do_show: bool, do_save: bool) -> None:
     list_reference_rate = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     run_count = 1000  # setting this value to 50000 takes a long time to run (60min+)
     distance = MinSquared()
@@ -54,7 +54,7 @@ def experiment_sensitivity(do_run: bool, do_plot: bool, do_show: bool) -> None:
             run_experiment(experiment, ignore_cache=ignore_cache)
 
     if do_plot:
-        plt.figure(figsize=(8, 7))
+        plt.figure(figsize=(5, 4))
         plt.title("Sensitivity for different estimators and distributions")
         list_list_sensitivity_mean = []
         list_data_generator_name = []
@@ -98,9 +98,12 @@ def experiment_sensitivity(do_run: bool, do_plot: bool, do_show: bool) -> None:
         plt.xlabel("Estimator")
         plt.ylabel("Sensitivity")
 
+    if do_save:
+        plt.savefig("figure/sensitivity.png", dpi=300, bbox_inches="tight")
+
     if do_show:
         plt.show()
 
 
 if __name__ == "__main__":
-    experiment_sensitivity(True, True, True)
+    experiment_sensitivity(True, True, True, True)
