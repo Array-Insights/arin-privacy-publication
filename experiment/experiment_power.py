@@ -17,7 +17,7 @@ from arin_privacy_publication.tools_experiment import create_experiment_dmr, cre
 
 
 # Experiment 1
-def experiment_power(do_run: bool, do_plot: bool, do_show: bool):
+def experiment_power(do_run: bool, do_plot: bool, do_show: bool, do_save: bool):
 
     sample_size = 200
     effect_size = 0.3
@@ -43,7 +43,7 @@ def experiment_power(do_run: bool, do_plot: bool, do_show: bool):
         for experiment in tqdm(list_experiment):  # TODO make this parallel
             run_experiment(experiment)
     if do_plot:
-        plt.figure()
+        plt.figure(figsize=(5, 4))
         list_test = [StudentTTest(epsilon=0), MannWhitneyUTest(epsilon=0)]
         for test in list_test:
             list_power = []
@@ -70,6 +70,9 @@ def experiment_power(do_run: bool, do_plot: bool, do_show: bool):
     if do_show:
         plt.show()
 
+    if do_save:
+        plt.savefig("figure/power.png", dpi=300, bbox_inches="tight")
+
 
 if __name__ == "__main__":
-    experiment_power(True, True, True)
+    experiment_power(True, True, True, True)
