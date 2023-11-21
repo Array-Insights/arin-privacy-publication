@@ -1,1 +1,0 @@
-{"experiment_type": "sensitivity", "data_generator": {"type": "Csv", "list_mean": [0, 1], "list_standard_deviation": [5, 5], "path_file_csv": "kidney_disease.csv", "list_series_name": ["age", "bp"]}, "sample_size": 200, "run_count": 1000, "estimator": {"type": "Max"}, "result": {"sensitivity_sdev": 5.551115123125783e-17, "sensitivity_mean": 0.2944690695548395}}

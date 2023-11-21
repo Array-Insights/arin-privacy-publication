@@ -1,1 +1,0 @@
-{"experiment_type": "power", "test": {"type": "WelchTTest", "alternative": "less", "epsilon": 0.0, "return_p": true}, "data_generator": {"type": "Normal", "list_mean": [0, 0.25999999999999973], "list_standard_deviation": [1, 1]}, "sample_size": 200, "signigicance": 0.05, "run_count": 1000, "result": {"power_mean": 0.834}}

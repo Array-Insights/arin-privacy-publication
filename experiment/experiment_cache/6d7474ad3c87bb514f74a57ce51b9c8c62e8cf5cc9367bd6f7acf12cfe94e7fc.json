@@ -1,1 +1,0 @@
-{"experiment_type": "sensitivity", "data_generator": {"type": "Normal", "list_mean": [0, 1], "list_standard_deviation": [5, 5]}, "sample_size": 200, "run_count": 1000, "estimator": {"type": "Variance"}, "result": {"sensitivity_sdev": 0.0, "sensitivity_mean": 0.8603203526073457}}

@@ -1,1 +1,0 @@
-{"experiment_type": "sensitivity", "data_generator": {"type": "Uniform", "list_mean": [0, 1], "list_standard_deviation": [5, 5]}, "sample_size": 200, "run_count": 1000, "estimator": {"type": "Multy", "list_estimator": [{"type": "Mean"}, {"type": "Max"}, {"type": "Variance"}]}, "result": {"sensitivity_sdev": 1.1102230246251565e-16, "sensitivity_mean": 0.37662127754159896}}

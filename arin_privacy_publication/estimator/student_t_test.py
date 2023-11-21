@@ -9,7 +9,7 @@ from arin_privacy_publication.estimator.base_estimator import BaseEstimator
 
 class StudentTTest(BaseEstimator):
     def __init__(self, alternative: str = "less", epsilon: float = 0, return_p: bool = True):
-        super().__init__("Student T-test")
+        super().__init__("Student T-Test")
         # TODO epsilon 0 is infitite noise epsilon infinite is zero noise
         self.alternative = alternative
         self.epsilon = epsilon

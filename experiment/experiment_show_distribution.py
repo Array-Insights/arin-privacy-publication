@@ -12,7 +12,7 @@ from arin_privacy_publication.distribution.uniform import Uniform
 
 
 # Experiment 1
-def experiment_show_distribution(do_run: bool, do_plot: bool, do_show: bool):
+def experiment_show_distribution(do_run: bool, do_plot: bool, do_show: bool, do_save: bool):
     sample_size = 2000000
     list_data_generator: List[BaseDistribution] = [
         Normal([0, 1], [1, 1]),
@@ -24,7 +24,7 @@ def experiment_show_distribution(do_run: bool, do_plot: bool, do_show: bool):
     if do_run:
         pass
     if do_plot:
-        plt.figure(figsize=(8, 7))
+        plt.figure(figsize=(5, 4))
         # plt.subplot(1, 5, 1)
         #        plt.ylabel("Relative frequency")
         for i, data_generator in enumerate(list_data_generator):
@@ -41,10 +41,13 @@ def experiment_show_distribution(do_run: bool, do_plot: bool, do_show: bool):
             #            plt.xlabel("Value")
 
             plt.xlim(-4, 4)
-        plt.subplots_adjust(left=0.1, right=0.9, bottom=0.1, top=0.9, hspace=0.6)
+        plt.subplots_adjust(left=0.1, right=0.9, bottom=0.1, top=0.9, hspace=0.8)
+
+    if do_save:
+        plt.savefig("figure/show_distribution.png", dpi=300, bbox_inches="tight")
     if do_show:
         plt.show()
 
 
 if __name__ == "__main__":
-    experiment_show_distribution(True, True, True)
+    experiment_show_distribution(True, True, True, True)

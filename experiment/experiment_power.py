@@ -64,8 +64,8 @@ def experiment_power(do_run: bool, do_plot: bool, do_show: bool, do_save: bool):
 
             plt.plot(list_epsilon, list_power, label=(test.estimator_name + " power"))
             plt.plot(list_epsilon, list_dmr_auc, label=(test.estimator_name + " DMR auc"))
-        plt.xlabel("epsilon")
-        plt.ylabel("Power")
+        plt.xlabel("Additional noise standard deviation")
+        plt.ylabel("Test power / DMR-AUC")
         plt.legend()
     if do_show:
         plt.show()
